@@ -56,6 +56,8 @@ type Server struct {
 	AccessTokenExpHandler        AccessTokenExpHandler
 	AuthorizeScopeHandler        AuthorizeScopeHandler
 	ResponseTokenHandler         ResponseTokenHandler
+
+	PreRedirectHandler PreRedirectHandler
 }
 
 func (s *Server) handleError(w http.ResponseWriter, req *AuthorizeRequest, err error) error {
@@ -312,7 +314,12 @@ func (s *Server) HandleAuthorizeRequest(w http.ResponseWriter, r *http.Request) 
 		req.RedirectURI = client.GetDomain()
 	}
 
-	return s.redirect(w, req, s.GetAuthorizeData(req.ResponseType, ti))
+	data := s.GetAuthorizeData(req.ResponseType, ti)
+	if fn := s.PreRedirectHandler; fn != nil {
+		return fn(w, req, data)
+	}
+
+	return s.redirect(w, req, data)
 }
 
 // ValidationTokenRequest the token request validation

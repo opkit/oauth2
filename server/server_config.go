@@ -73,6 +73,9 @@ func (s *Server) SetInternalErrorHandler(handler InternalErrorHandler) {
 func (s *Server) SetPreRedirectErrorHandler(handler PreRedirectErrorHandler) {
 	s.PreRedirectErrorHandler = handler
 }
+func (s *Server) SetPreRedirectHandler(handler PreRedirectHandler) {
+	s.PreRedirectHandler = handler
+}
 
 // SetExtensionFieldsHandler in response to the access token with the extension of the field
 func (s *Server) SetExtensionFieldsHandler(handler ExtensionFieldsHandler) {
